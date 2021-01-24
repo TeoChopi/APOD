@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.tapp.apod_app.ui.main.ApodListFragmentViewModel
+import com.tapp.apod_app.ui.apodList.ApodListFragmentViewModel
 import com.tapp.apod_app.ui.detail.DetailViewModel
 
 class CustomViewModelFactory(private val application: Application, private val owner: LifecycleOwner) :

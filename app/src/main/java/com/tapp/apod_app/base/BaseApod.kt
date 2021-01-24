@@ -34,11 +34,9 @@ abstract class BaseApod {
             super.onViewCreated(view, savedInstanceState)
 
             init()
-            initListeners()
         }
 
         abstract fun getXmlLayout() : Int
         abstract fun init()
-        abstract fun initListeners()
     }
 }

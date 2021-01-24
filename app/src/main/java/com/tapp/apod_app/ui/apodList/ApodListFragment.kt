@@ -1,14 +1,11 @@
-package com.tapp.apod_app.ui.main
+package com.tapp.apod_app.ui.apodList
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tapp.apod_app.R
+import com.tapp.apod_app.base.BaseApod
 import com.tapp.apod_app.repository.model.Apod
 import com.tapp.apod_app.ui.detail.DetailActivity
 import com.tapp.apod_app.utils.ApiKey.EXTRA_APOD
@@ -19,7 +16,7 @@ import com.tapp.apod_app.utils.ApiKey.REQUEST_CODE
 import com.tapp.apod_app.utils.CustomViewModelFactory
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class ApodListFragment : Fragment(), ApodListItemDelegate, ApodListViewModelDelegate {
+class ApodListFragment : BaseApod.BaseFragment(), ApodListItemDelegate, ApodListViewModelDelegate {
 
     private val mViewModel: ApodListFragmentViewModel by lazy {
         val factory = CustomViewModelFactory(requireActivity().application, this)
@@ -31,16 +28,11 @@ class ApodListFragment : Fragment(), ApodListItemDelegate, ApodListViewModelDele
         adapter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    override fun getXmlLayout(): Int {
+        return R.layout.fragment_main
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        initialize()
-    }
-
-    private fun initialize() {
+    override fun init() {
         recyclerViewMainList.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recyclerViewMainList.adapter = apodAdapter
         mViewModel.delegate = this

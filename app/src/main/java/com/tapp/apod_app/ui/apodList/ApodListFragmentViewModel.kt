@@ -1,4 +1,4 @@
-package com.tapp.apod_app.ui.main
+package com.tapp.apod_app.ui.apodList
 
 import android.app.Application
 import androidx.lifecycle.LifecycleOwner

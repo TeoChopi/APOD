@@ -1,17 +1,16 @@
 package com.tapp.apod_app.ui.main
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
 import androidx.work.Constraints
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.tapp.apod_app.R
 import com.tapp.apod_app.base.BaseApod
+import com.tapp.apod_app.ui.apodList.ApodListFragment
 import com.tapp.apod_app.ui.detail.DetailActivity
 import com.tapp.apod_app.utils.ApiKey.EXTRA_APOD
 import com.tapp.apod_app.utils.ApiKey.REQUEST_CODE
