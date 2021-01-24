@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.tapp.apod_app.repository.model.ApodResponse
+import com.tapp.apod_app.repository.model.Apod
 
-@Database(entities = [ApodResponse::class], version = 1, exportSchema = false)
+@Database(entities = [Apod::class], version = 1, exportSchema = false)
 abstract class ApodRoomDatabase : RoomDatabase() {
 
     abstract fun apodDao(): ApodDao

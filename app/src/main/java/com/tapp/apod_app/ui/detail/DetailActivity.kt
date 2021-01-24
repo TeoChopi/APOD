@@ -6,8 +6,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.tapp.apod_app.R
 import com.tapp.apod_app.base.BaseApod
-import com.tapp.apod_app.repository.model.ApodResponse
+import com.tapp.apod_app.repository.model.Apod
 import com.tapp.apod_app.repository.network.ApodService
+import com.tapp.apod_app.utils.ApiKey.LOCAL_APOD
 import com.tapp.apod_app.utils.CustomViewModelFactory
 import io.reactivex.Completable
 import io.reactivex.CompletableObserver
@@ -20,17 +21,13 @@ class DetailActivity : BaseApod.BaseActivity() {
 
     companion object {
         const val TAG = "DetailActivity"
-        const val LOCAL_APOD = "LOCAL_APOD"
-        const val OBJECT_APOD = "OBJECT_APOD"
-        const val SERVER_APOD = "SERVER_APOD"
-        const val REQUEST_CODE = 100
     }
 
-    private var mApodResponse: ApodResponse? = null
+    private var mApod: Apod? = null
     private var localApod = false
 
     private val mViewModel: DetailViewModel by lazy {
-        val factory = CustomViewModelFactory(application)
+        val factory = CustomViewModelFactory(application, this)
         ViewModelProvider(this, factory).get(DetailViewModel::class.java)
     }
 
@@ -57,7 +54,7 @@ class DetailActivity : BaseApod.BaseActivity() {
                     .observe(this, Observer { apod ->
 
                         if (apod != null) {
-                            mApodResponse = apod
+                            mApod = apod
                             mViewModel.showApod(this@DetailActivity, txtDescription, imageApodDetail, apod)
                         }
                     })
@@ -74,11 +71,11 @@ class DetailActivity : BaseApod.BaseActivity() {
         btnApodDetail.setOnClickListener {
 
             if (localApod) {
-                mViewModel.deleteApod(mApodResponse!!)
+                mViewModel.deleteApod(mApod!!)
             } else {
 
                 Completable.fromAction {
-                    mViewModel.insertApod(mApodResponse!!)
+                    mViewModel.insertApod(mApod!!)
                 }.observeOn(AndroidSchedulers.mainThread())
                     .subscribe(object : CompletableObserver {
                         override fun onComplete() {
@@ -100,10 +97,10 @@ class DetailActivity : BaseApod.BaseActivity() {
     }
 
     private fun getServerApod() {
-        mViewModel.getApod(object : ApodService.CallbackResponse<ApodResponse> {
-            override fun onResponse(response: ApodResponse) {
-                mApodResponse = response
-                mViewModel.showApod(this@DetailActivity, txtDescription, imageApodDetail, mApodResponse!!)
+        mViewModel.getApod(object : ApodService.CallbackResponse<Apod> {
+            override fun onResponse(response: Apod) {
+                mApod = response
+                mViewModel.showApod(this@DetailActivity, txtDescription, imageApodDetail, mApod!!)
             }
 
             override fun onFailure(t: Throwable, res: Response<*>?) {

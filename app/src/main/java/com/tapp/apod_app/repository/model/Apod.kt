@@ -7,7 +7,7 @@ import java.io.Serializable
 import java.util.*
 
 @Entity(tableName = "apod_table")
-data class ApodResponse(
+data class Apod(
 
 	@PrimaryKey
 	var id: String = UUID.randomUUID().toString(),
