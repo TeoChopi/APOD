@@ -15,12 +15,12 @@ abstract class BaseApod {
             super.onCreate(savedInstanceState)
             setContentView(getXmlLayout())
 
-            initValues()
+            init()
             initListeners()
         }
 
         abstract fun getXmlLayout() : Int
-        abstract fun initValues()
+        abstract fun init()
         abstract fun initListeners()
     }
 
@@ -33,12 +33,12 @@ abstract class BaseApod {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-            initValues()
+            init()
             initListeners()
         }
 
         abstract fun getXmlLayout() : Int
-        abstract fun initValues()
+        abstract fun init()
         abstract fun initListeners()
     }
 }

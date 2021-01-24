@@ -1,4 +1,4 @@
-package com.tapp.apod_app.repository.network
+package com.tapp.apod_app.repository.services
 
 import com.tapp.apod_app.repository.model.Apod
 import retrofit2.Call

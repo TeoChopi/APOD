@@ -11,6 +11,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.tapp.apod_app.R
+import com.tapp.apod_app.base.BaseApod
 import com.tapp.apod_app.ui.detail.DetailActivity
 import com.tapp.apod_app.utils.ApiKey.EXTRA_APOD
 import com.tapp.apod_app.utils.ApiKey.REQUEST_CODE
@@ -19,15 +20,15 @@ import com.tapp.apod_app.works.ApodWorker
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseApod.BaseActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun getXmlLayout(): Int {
+        return R.layout.activity_main
+    }
+
+    override fun init() {
         setSupportActionBar(findViewById(R.id.toolbar))
-
         showApods()
-        setListeners()
         setWorker()
     }
 
@@ -37,7 +38,30 @@ class MainActivity : AppCompatActivity() {
             .commitNow()
     }
 
-    private fun setListeners() {
+    private fun setWorker() {
+
+        val constraints = Constraints.Builder()
+            //.setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+
+        val apodWorker = PeriodicWorkRequest.Builder(ApodWorker::class.java, 1, TimeUnit.DAYS)
+            .addTag("ApodWork")
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(applicationContext).enqueue(apodWorker)
+
+        WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(apodWorker.id).observe(this, { apodWork ->
+            apodWork?.let {
+                if (apodWork.state == WorkInfo.State.SUCCEEDED) {
+
+                    Log.w("TAG", "")
+                }
+            }
+        })
+    }
+
+    override fun initListeners() {
         fab.setOnClickListener {
             Intent(this, DetailActivity::class.java).apply {
                 putExtra(EXTRA_APOD, SERVER_APOD)
@@ -67,28 +91,5 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun setWorker() {
-
-        val constraints = Constraints.Builder()
-            //.setRequiredNetworkType(NetworkType.UNMETERED)
-            .build()
-
-        val apodWorker = PeriodicWorkRequest.Builder(ApodWorker::class.java, 1, TimeUnit.DAYS)
-            .addTag("ApodWork")
-            .setConstraints(constraints)
-            .build()
-
-        WorkManager.getInstance(applicationContext).enqueue(apodWorker)
-
-        WorkManager.getInstance(applicationContext).getWorkInfoByIdLiveData(apodWorker.id).observe(this, { apodWork ->
-            apodWork?.let {
-                if (apodWork.state == WorkInfo.State.SUCCEEDED) {
-
-                    Log.w("TAG", "")
-                }
-            }
-        })
     }
 }

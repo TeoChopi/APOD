@@ -14,7 +14,7 @@ class CustomViewModelFactory(private val application: Application, private val o
         return with(modelClass) {
             when {
                 isAssignableFrom(ApodListFragmentViewModel::class.java) -> ApodListFragmentViewModel(application, owner)
-                isAssignableFrom(DetailViewModel::class.java) -> DetailViewModel(application)
+                isAssignableFrom(DetailViewModel::class.java) -> DetailViewModel(application, owner)
                 else -> throw IllegalArgumentException("Unknown ViewModel")
             }
         } as T

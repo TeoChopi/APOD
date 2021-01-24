@@ -6,7 +6,7 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.tapp.apod_app.repository.db.ApodRoomDatabase
 import com.tapp.apod_app.repository.model.Apod
-import com.tapp.apod_app.repository.network.ApodService
+import com.tapp.apod_app.repository.services.ApodService
 import com.tapp.apod_app.utils.ApiKey
 import retrofit2.Call
 import retrofit2.Callback
