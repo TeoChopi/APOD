@@ -1,68 +1,51 @@
 package com.tapp.apod_app.ui.detail
 
-import android.app.Activity
 import android.app.Application
-import android.content.Context
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.lifecycle.LiveData
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModel
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.tapp.apod_app.R
 import com.tapp.apod_app.repository.db.ApodRoomDatabase
-import com.tapp.apod_app.repository.model.ApodResponse
-import com.tapp.apod_app.repository.network.ApodService
+import com.tapp.apod_app.repository.model.Apod
+import com.tapp.apod_app.repository.services.ApodService
 import com.tapp.apod_app.utils.ApiKey
-import io.reactivex.Completable
-import kotlinx.android.synthetic.main.activity_detail.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class DetailViewModel(private val context: Application) : ViewModel() {
+class DetailViewModel(context: Application, private val owner: LifecycleOwner) : ViewModel() {
 
-    fun getApod(cb: ApodService.CallbackResponse<ApodResponse>) {
-        ApodService().apodApi.getApod(ApiKey.API_KEY).enqueue(object : Callback<ApodResponse> {
-            override fun onResponse(call: Call<ApodResponse>, response: Response<ApodResponse>) {
+    var delegate: DetailViewModelDelegate? = null
+
+    private val myApodRepository = ApodRoomDatabase.getInstance(context).apodDao()
+
+    fun getApod() {
+        ApodService().apodApi.getApod(ApiKey.API_KEY).enqueue(object : Callback<Apod> {
+            override fun onResponse(call: Call<Apod>, response: Response<Apod>) {
                 if (response.isSuccessful && response.body() != null) {
-                    cb.onResponse(response.body()!!)
+                    delegate?.onApodSuccess(response.body()!!)
                 } else {
-                    cb.onFailure(Throwable(response.message()), response)
+                    delegate?.onApodFailure(response.message())
                 }
             }
 
-            override fun onFailure(call: Call<ApodResponse>, t: Throwable) {
-                cb.onFailure(t)
+            override fun onFailure(call: Call<Apod>, t: Throwable) {
+                delegate?.onApodFailure(t.toString())
             }
         })
     }
 
-
-    fun insertApod(apodResponse: ApodResponse) {
-        ApodRoomDatabase.getInstance(context).apodDao().insertApod(apodResponse)
+    fun insertApod(apod: Apod) {
+        myApodRepository.insertApod(apod)
+        delegate?.insertApod(apod)
     }
 
-    fun getLocalApodId(apodId: String) : LiveData<ApodResponse>{
-        return ApodRoomDatabase.getInstance(context).apodDao().getApodId(apodId)
+    fun getLocalApodId(apodId: String) {
+        return myApodRepository.getApodId(apodId).observe(owner, { apod ->
+            if (apod != null) delegate?.getApod(apod)
+        })
     }
 
-    fun deleteApod(apodResponse: ApodResponse) {
-        ApodRoomDatabase.getInstance(context).apodDao().deleteApod(apodResponse)
-    }
-
-
-    fun showApod(context: Activity, txtDescription: TextView, imageApodDetail: ImageView, apodResponse: ApodResponse) {
-
-        txtDescription.text = apodResponse.explanation
-
-        Glide.with(context)
-            .load(apodResponse.url)
-            .apply(
-                RequestOptions()
-                    .placeholder(R.drawable.ic_launcher_background)
-
-            )
-            .into(imageApodDetail)
+    fun deleteApod(apod: Apod) {
+        myApodRepository.deleteApod(apod)
+        delegate?.deleteApod(apod)
     }
 }

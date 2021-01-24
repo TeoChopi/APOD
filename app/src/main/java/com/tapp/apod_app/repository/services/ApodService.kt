@@ -1,4 +1,4 @@
-package com.tapp.apod_app.repository.network
+package com.tapp.apod_app.repository.services
 
 import okhttp3.OkHttpClient
 import retrofit2.Response

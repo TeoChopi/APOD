@@ -2,13 +2,11 @@ package com.tapp.apod_app.works
 
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.Observer
-import androidx.lifecycle.observe
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.tapp.apod_app.repository.db.ApodRoomDatabase
-import com.tapp.apod_app.repository.model.ApodResponse
-import com.tapp.apod_app.repository.network.ApodService
+import com.tapp.apod_app.repository.model.Apod
+import com.tapp.apod_app.repository.services.ApodService
 import com.tapp.apod_app.utils.ApiKey
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,8 +17,8 @@ class ApodWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
 
     override fun doWork(): Result {
 
-        ApodService().apodApi.getApod(ApiKey.API_KEY).enqueue(object : Callback<ApodResponse> {
-            override fun onResponse(call: Call<ApodResponse>, response: Response<ApodResponse>) {
+        ApodService().apodApi.getApod(ApiKey.API_KEY).enqueue(object : Callback<Apod> {
+            override fun onResponse(call: Call<Apod>, response: Response<Apod>) {
                 if (response.isSuccessful && response.body() != null) {
 
                     val apodResponse = response.body()
@@ -35,7 +33,7 @@ class ApodWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
                 }
             }
 
-            override fun onFailure(call: Call<ApodResponse>, t: Throwable) {
+            override fun onFailure(call: Call<Apod>, t: Throwable) {
                 Log.w("TAG", t.localizedMessage!!)
             }
         })

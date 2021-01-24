@@ -1,6 +1,6 @@
-package com.tapp.apod_app.repository.network
+package com.tapp.apod_app.repository.services
 
-import com.tapp.apod_app.repository.model.ApodResponse
+import com.tapp.apod_app.repository.model.Apod
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -10,7 +10,7 @@ interface ApodApi {
 
     @GET("planetary/apod")  // planetary/apod?api_key=DEMO_KEY
     @Headers("Content-Type: application/json")
-    fun getApod(@Query("api_key") apiKey: String): Call<ApodResponse>
+    fun getApod(@Query("api_key") apiKey: String): Call<Apod>
 
 
 }

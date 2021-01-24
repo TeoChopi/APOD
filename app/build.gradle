@@ -61,13 +61,7 @@ dependencies {
     // Room
     implementation 'androidx.room:room-runtime:2.2.6'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    kapt "androidx.room:room-compiler:2.3.0-alpha04"
-
-    // RxJava2
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'androidx.room:room-rxjava2:2.2.6'
-    implementation 'android.arch.persistence.room:rxjava2:1.1.1'
+    kapt 'androidx.room:room-compiler:2.2.6'
 
     // Retrofit 4ever
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
